@@ -193,10 +193,37 @@ function HomeScreenReady({
     [setMinimalShellMode],
   )
 
+  /*FH_LOGGED_OUT_FORUM_TAB_V2*/
+
+  const FH_FORUM_DID = 'did:plc:y42cywiwwm436o2suactqcng'
+
+  const LOGGED_OUT_FORUM_FEED = `author|${FH_FORUM_DID}|posts_and_author_threads`
+
+  const LOGGED_OUT_DISCOVER_FEED = `feedgen|${PROD_DEFAULT_FEED('whats-hot')}`
+
+  const LOGGED_OUT_TABS = [
+    {displayName: 'Forum XIII Hietzing'},
+
+    {displayName: 'Discover'},
+  ]
+
   const [demoMode] = useDemoMode()
 
   const renderTabBar = React.useCallback(
     (props: RenderTabBarFnProps) => {
+      /*FH_LOGGED_OUT_TABBAR_V2*/
+      if (!hasSession) {
+        return (
+          <HomeHeader
+            key="FEEDS_TAB_BAR"
+            {...props}
+            testID="homeScreenFeedTabs"
+            onPressSelected={onPressSelected}
+            feeds={LOGGED_OUT_TABS}
+          />
+        )
+      }
+
       if (demoMode) {
         return (
           <HomeHeader
@@ -219,7 +246,7 @@ function HomeScreenReady({
         />
       )
     },
-    [onPressSelected, pinnedFeedInfos, demoMode],
+    [onPressSelected, pinnedFeedInfos, demoMode, hasSession],
   )
 
   const renderFollowingEmptyState = React.useCallback(() => {
@@ -322,10 +349,18 @@ function HomeScreenReady({
       onPageScrollStateChanged={onPageScrollStateChanged}
       renderTabBar={renderTabBar}>
       <FeedPage
-        testID="customFeedPage"
+        testID="forumFeedPage"
         isPageFocused
         isPageAdjacent={false}
-        feed={`feedgen|${PROD_DEFAULT_FEED('whats-hot')}`}
+        feed={LOGGED_OUT_FORUM_FEED}
+        renderEmptyState={renderCustomFeedEmptyState}
+        feedInfo={pinnedFeedInfos[0]}
+      />
+      <FeedPage
+        testID="discoverFeedPage"
+        isPageFocused
+        isPageAdjacent={false}
+        feed={LOGGED_OUT_DISCOVER_FEED}
         renderEmptyState={renderCustomFeedEmptyState}
         feedInfo={pinnedFeedInfos[0]}
       />
