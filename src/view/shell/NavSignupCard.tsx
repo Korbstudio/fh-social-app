@@ -37,8 +37,15 @@ let NavSignupCard = ({}: {}): React.ReactNode => {
 
       <View style={[a.pt_lg]}>
         <Text
-          style={[a.text_3xl, a.font_bold, {lineHeight: a.text_3xl.fontSize}]}>
-          <Trans>Join the conversation</Trans>
+          style={{
+            fontSize: 18,
+            lineHeight: 20,
+            fontWeight: '700',
+            flexShrink: 1,
+          }}
+          numberOfLines={1}
+          ellipsizeMode="tail">
+          Forum XIII Hietzing
         </Text>
       </View>
 
