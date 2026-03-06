@@ -391,6 +391,33 @@ export type SavedFeedSourceInfo = FeedSourceInfo & {
   savedFeed: AppBskyActorDefs.SavedFeed
 }
 
+const PWI_FORUM_XIII_FEED_STUB: SavedFeedSourceInfo = {
+  type: 'feed',
+  displayName: 'Forum XIII Hietzing',
+  uri: 'forum-hietzing.at',
+  feedDescriptor: `author|forum-hietzing.at|posts_with_replies`,
+  route: {
+    href: '/',
+    name: 'Home',
+    params: {},
+  },
+  cid: '',
+  avatar: '',
+  description: new RichText({text: ''}),
+  creatorDid: '',
+  creatorHandle: '',
+  likeCount: 0,
+  likeUri: '',
+  // ---
+  savedFeed: {
+    id: 'pwi-forum-xiii',
+    type: 'feed',
+    value: 'forum-hietzing.at',
+    pinned: true,
+  },
+  contentMode: undefined,
+}
+
 const PWI_DISCOVER_FEED_STUB: SavedFeedSourceInfo = {
   type: 'feed',
   displayName: 'Discover',
@@ -437,9 +464,8 @@ export function usePinnedFeedsInfos() {
     enabled: !isLoadingPrefs,
     queryFn: async () => {
       if (!hasSession) {
-        return [PWI_DISCOVER_FEED_STUB]
+        return [PWI_FORUM_XIII_FEED_STUB, PWI_DISCOVER_FEED_STUB]
       }
-
       let resolved = new Map<string, FeedSourceInfo>()
 
       // Get all feeds. We can do this in a batch.

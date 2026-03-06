@@ -195,6 +195,14 @@ function HomeScreenReady({
 
   const [demoMode] = useDemoMode()
 
+  const forcedLoggedOutDefaultRef = React.useRef(false)
+  React.useEffect(() => {
+    if (!hasSession && !forcedLoggedOutDefaultRef.current && allFeeds.length) {
+      setSelectedFeed(allFeeds[0])
+      forcedLoggedOutDefaultRef.current = true
+    }
+  }, [hasSession, allFeeds, setSelectedFeed])
+
   const renderTabBar = React.useCallback(
     (props: RenderTabBarFnProps) => {
       if (demoMode) {
@@ -321,14 +329,22 @@ function HomeScreenReady({
       onPageSelected={onPageSelected}
       onPageScrollStateChanged={onPageScrollStateChanged}
       renderTabBar={renderTabBar}>
-      <FeedPage
-        testID="customFeedPage"
-        isPageFocused
-        isPageAdjacent={false}
-        feed={`feedgen|${PROD_DEFAULT_FEED('whats-hot')}`}
-        renderEmptyState={renderCustomFeedEmptyState}
-        feedInfo={pinnedFeedInfos[0]}
-      />
+      {pinnedFeedInfos.length ? (
+        pinnedFeedInfos.map((feedInfo, index) => (
+          <FeedPage
+            key={feedInfo.feedDescriptor}
+            testID="customFeedPage"
+            isPageFocused={maybeSelectedFeed === feedInfo.feedDescriptor}
+            isPageAdjacent={Math.abs(selectedIndex - index) === 1}
+            feed={feedInfo.feedDescriptor}
+            renderEmptyState={renderCustomFeedEmptyState}
+            savedFeedConfig={feedInfo.savedFeed}
+            feedInfo={feedInfo}
+          />
+        ))
+      ) : (
+        <NoFeedsPinned preferences={preferences} />
+      )}
     </Pager>
   )
 }
