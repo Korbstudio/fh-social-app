@@ -1,5 +1,5 @@
-import React from 'react'
-import {View} from 'react-native'
+import React, {useCallback} from 'react'
+import {Image, View} from 'react-native'
 import Animated from 'react-native-reanimated'
 import {msg, plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
@@ -20,8 +20,6 @@ import {useShellLayout} from '#/state/shell/shell-layout'
 import {useCloseAllActiveElements} from '#/state/util'
 import {Link} from '#/view/com/util/Link'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
-import {Logo} from '#/view/icons/Logo'
-import {Logotype} from '#/view/icons/Logotype'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
@@ -61,18 +59,17 @@ export function BottomBarWeb() {
   const unreadMessageCount = useUnreadMessageCount()
   const notificationCountStr = useUnreadNotifications()
 
-  const showSignIn = React.useCallback(() => {
+  const showSignIn = useCallback(() => {
     closeAllActiveElements()
     requestSwitchToAccount({requestedAccount: 'none'})
   }, [requestSwitchToAccount, closeAllActiveElements])
 
-  const showCreateAccount = React.useCallback(() => {
+  const showCreateAccount = useCallback(() => {
     closeAllActiveElements()
     requestSwitchToAccount({requestedAccount: 'new'})
-    // setShowLoggedOut(true)
   }, [requestSwitchToAccount, closeAllActiveElements])
 
-  const onLongPressProfile = React.useCallback(() => {
+  const onLongPressProfile = useCallback(() => {
     accountSwitchControl.open()
   }, [accountSwitchControl])
 
@@ -106,6 +103,7 @@ export function BottomBarWeb() {
                 )
               }}
             </NavItem>
+
             <NavItem routeName="Search" href="/search">
               {({isActive}) => {
                 const Icon = isActive ? MagnifyingGlassFilled : MagnifyingGlass
@@ -119,126 +117,129 @@ export function BottomBarWeb() {
               }}
             </NavItem>
 
-            {hasSession && (
-              <>
-                <NavItem
-                  routeName="Messages"
-                  href="/messages"
-                  notificationCount={unreadMessageCount.numUnread}
-                  hasNew={unreadMessageCount.hasNew}>
-                  {({isActive}) => {
-                    const Icon = isActive ? MessageFilled : Message
-                    return (
-                      <Icon
-                        aria-hidden={true}
-                        width={iconWidth - 1}
-                        style={[
-                          styles.ctrlIcon,
-                          t.atoms.text,
-                          styles.messagesIcon,
-                        ]}
-                      />
-                    )
-                  }}
-                </NavItem>
-                <NavItem
-                  routeName="Notifications"
-                  href="/notifications"
-                  notificationCount={notificationCountStr}>
-                  {({isActive}) => {
-                    const Icon = isActive ? BellFilled : Bell
-                    return (
-                      <Icon
-                        aria-hidden={true}
-                        width={iconWidth}
-                        style={[styles.ctrlIcon, t.atoms.text, styles.bellIcon]}
-                      />
-                    )
-                  }}
-                </NavItem>
-                <NavItem
-                  routeName="Profile"
-                  href={
-                    currentAccount
-                      ? makeProfileLink({
-                          did: currentAccount.did,
-                          handle: currentAccount.handle,
-                        })
-                      : '/'
-                  }
-                  onLongPress={onLongPressProfile}>
-                  {({isActive}) => (
-                    <View style={styles.ctrlIconSizingWrapper}>
-                      <View
-                        style={[
-                          styles.ctrlIcon,
-                          styles.profileIcon,
-                          isActive && [
-                            styles.onProfile,
-                            {borderColor: t.atoms.text.color},
-                          ],
-                        ]}>
-                        <UserAvatar
-                          avatar={profile?.avatar}
-                          size={iconWidth - 3}
-                          type={
-                            profile?.associated?.labeler ? 'labeler' : 'user'
-                          }
-                        />
-                      </View>
-                    </View>
-                  )}
-                </NavItem>
-              </>
-            )}
+            <NavItem
+              routeName="Messages"
+              href="/messages"
+              notificationCount={unreadMessageCount.numUnread}
+              hasNew={unreadMessageCount.hasNew}>
+              {({isActive}) => {
+                const Icon = isActive ? MessageFilled : Message
+                return (
+                  <Icon
+                    aria-hidden={true}
+                    width={iconWidth - 1}
+                    style={[styles.ctrlIcon, t.atoms.text, styles.messagesIcon]}
+                  />
+                )
+              }}
+            </NavItem>
+
+            <NavItem
+              routeName="Notifications"
+              href="/notifications"
+              notificationCount={notificationCountStr}>
+              {({isActive}) => {
+                const Icon = isActive ? BellFilled : Bell
+                return (
+                  <Icon
+                    aria-hidden={true}
+                    width={iconWidth}
+                    style={[styles.ctrlIcon, t.atoms.text, styles.bellIcon]}
+                  />
+                )
+              }}
+            </NavItem>
+
+            <NavItem
+              routeName="Profile"
+              href={
+                currentAccount
+                  ? makeProfileLink({
+                      did: currentAccount.did,
+                      handle: currentAccount.handle,
+                    })
+                  : '/'
+              }
+              onLongPress={onLongPressProfile}>
+              {({isActive}) => (
+                <View style={styles.ctrlIconSizingWrapper}>
+                  <View
+                    style={[
+                      styles.ctrlIcon,
+                      styles.profileIcon,
+                      isActive && [
+                        styles.onProfile,
+                        {borderColor: t.atoms.text.color},
+                      ],
+                    ]}>
+                    <UserAvatar
+                      avatar={profile?.avatar}
+                      size={iconWidth - 3}
+                      type={profile?.associated?.labeler ? 'labeler' : 'user'}
+                    />
+                  </View>
+                </View>
+              )}
+            </NavItem>
           </>
         ) : (
-          <>
-            <View
-              style={[
-                a.w_full,
-                a.flex_row,
-                a.align_center,
-                a.justify_between,
-                a.gap_sm,
-                {
-                  paddingTop: 14,
-                  paddingBottom: 14,
-                  paddingLeft: 14,
-                  paddingRight: 6,
-                },
-              ]}>
-              <View style={[a.flex_row, a.align_center, a.gap_md]}>
-                <Logo width={32} />
-                <View style={{paddingTop: 4}}>
-                  <Logotype width={80} fill={t.atoms.text.color} />
-                </View>
-              </View>
-
-              <View style={[a.flex_row, a.flex_wrap, a.gap_sm]}>
-                <Button
-                  onPress={showCreateAccount}
-                  label={_(msg`Create account`)}
-                  size="small"
-                  variant="solid"
-                  color="primary">
-                  <ButtonText>
-                    <Trans>Create account</Trans>
-                  </ButtonText>
-                </Button>
-                <Button
-                  onPress={showSignIn}
-                  label={_(msg`Sign in`)}
-                  size="small"
-                  variant="solid"
-                  color="secondary">
-                  <ButtonText>
-                    <Trans>Sign in</Trans>
-                  </ButtonText>
-                </Button>
-              </View>
+          <View
+            style={[
+              a.w_full,
+              a.flex_row,
+              a.align_center,
+              a.justify_between,
+              a.gap_sm,
+              {
+                paddingTop: 14,
+                paddingBottom: 14,
+                paddingLeft: 14,
+                paddingRight: 6,
+              },
+            ]}>
+            <View style={[a.flex_row, a.align_center]}>
+              <Image
+                source={require('../../../../assets/fh-logo.png')}
+                accessibilityLabel="Forum Hietzing"
+                accessibilityHint="Zeigt das Logo von Forum Hietzing"
+                accessibilityIgnoresInvertColors={true}
+                style={{width: 32, height: 32}}
+                resizeMode="contain"
+              />
+              <Text
+                style={[
+                  a.text_lg,
+                  a.font_bold,
+                  {color: t.atoms.text.color, marginLeft: 8},
+                ]}>
+                Hietzing
+              </Text>
             </View>
-          </>
+
+            <View style={[a.flex_row, a.flex_wrap, a.gap_sm]}>
+              <Button
+                onPress={showCreateAccount}
+                label={_(msg`Create account`)}
+                size="small"
+                variant="solid"
+                color="primary">
+                <ButtonText>
+                  <Trans>Create account</Trans>
+                </ButtonText>
+              </Button>
+
+              <Button
+                onPress={showSignIn}
+                label={_(msg`Sign in`)}
+                size="small"
+                variant="solid"
+                color="secondary">
+                <ButtonText>
+                  <Trans>Sign in</Trans>
+                </ButtonText>
+              </Button>
+            </View>
+          </View>
         )}
       </Animated.View>
     </>
@@ -256,6 +257,7 @@ const NavItem: React.FC<{
   const t = useTheme()
   const {_} = useLingui()
   const {currentAccount} = useSession()
+
   const currentRoute = useNavigationState(state => {
     if (!state) {
       return {name: 'Home'}
@@ -263,7 +265,6 @@ const NavItem: React.FC<{
     return getCurrentRoute(state)
   })
 
-  // Checks whether we're on someone else's profile
   const isOnDifferentProfile =
     currentRoute.name === 'Profile' &&
     routeName === 'Profile' &&
@@ -289,6 +290,7 @@ const NavItem: React.FC<{
       accessible={true}
       onLongPress={onLongPress}>
       {children({isActive})}
+
       {notificationCount ? (
         <View
           style={[
