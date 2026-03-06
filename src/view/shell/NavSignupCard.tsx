@@ -1,12 +1,11 @@
 import React from 'react'
-import {View} from 'react-native'
+import {Image, View} from 'react-native'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useCloseAllActiveElements} from '#/state/util'
-import {Logo} from '#/view/icons/Logo'
 import {atoms as a} from '#/alf'
 import {AppLanguageDropdown} from '#/components/AppLanguageDropdown'
 import {Button, ButtonText} from '#/components/Button'
@@ -31,8 +30,15 @@ let NavSignupCard = ({}: {}): React.ReactNode => {
 
   return (
     <View style={[{maxWidth: 245}]}>
-      <Link to="/" label="Bluesky - Home">
-        <Logo width={32} />
+      <Link to="/" label="Forum Hietzing - Home">
+        <Image
+          source={require('../../../assets/fh-logo.png')}
+          accessibilityLabel="Forum Hietzing"
+          accessibilityHint="Zeigt das Logo von Forum Hietzing"
+          accessibilityIgnoresInvertColors={true}
+          style={{width: 32, height: 32}}
+          resizeMode="contain"
+        />
       </Link>
 
       <View style={[a.pt_lg]}>
