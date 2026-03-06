@@ -19,11 +19,7 @@ import {
   useQueryClient,
 } from '@tanstack/react-query'
 
-import {
-  DISCOVER_FEED_URI,
-  DISCOVER_SAVED_FEED,
-  FORUM_XIII_ACTOR,
-} from '#/lib/constants'
+import {DISCOVER_FEED_URI, DISCOVER_SAVED_FEED} from '#/lib/constants'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {
@@ -398,8 +394,8 @@ export type SavedFeedSourceInfo = FeedSourceInfo & {
 const PWI_FORUM_XIII_FEED_STUB: SavedFeedSourceInfo = {
   type: 'feed',
   displayName: 'Forum XIII Hietzing',
-  uri: '',
-  feedDescriptor: `author|${FORUM_XIII_ACTOR}|posts_with_replies`,
+  uri: 'forum-hietzing.at',
+  feedDescriptor: `author|forum-hietzing.at|posts_with_replies`,
   route: {
     href: '/',
     name: 'Home',
@@ -409,14 +405,14 @@ const PWI_FORUM_XIII_FEED_STUB: SavedFeedSourceInfo = {
   avatar: '',
   description: new RichText({text: ''}),
   creatorDid: '',
-  creatorHandle: FORUM_XIII_ACTOR,
+  creatorHandle: '',
   likeCount: 0,
   likeUri: '',
   // ---
   savedFeed: {
     id: 'pwi-forum-xiii',
     type: 'feed',
-    value: 'pwi-forum-xiii',
+    value: 'forum-hietzing.at',
     pinned: true,
   },
   contentMode: undefined,
