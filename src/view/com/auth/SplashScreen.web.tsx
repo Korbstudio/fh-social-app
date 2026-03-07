@@ -1,5 +1,5 @@
-import React from 'react'
-import {Pressable, View} from 'react-native'
+import React, {useEffect, useState} from 'react'
+import {Image, Pressable, View} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
@@ -8,8 +8,6 @@ import {Trans} from '@lingui/react/macro'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {useKawaiiMode} from '#/state/preferences/kawaii'
 import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
-import {Logo} from '#/view/icons/Logo'
-import {Logotype} from '#/view/icons/Logotype'
 import {
   AppClipOverlay,
   postAppClipMessage,
@@ -33,9 +31,9 @@ export const SplashScreen = ({
   const {_} = useLingui()
   const t = useTheme()
   const {isTabletOrMobile: IS_WEB_MOBILE} = useWebMediaQueries()
-  const [showClipOverlay, setShowClipOverlay] = React.useState(false)
+  const [showClipOverlay, setShowClipOverlay] = useState(false)
 
-  React.useEffect(() => {
+  useEffect(() => {
     const getParams = new URLSearchParams(window.location.search)
     const clip = getParams.get('clip')
     if (clip === 'true') {
@@ -87,13 +85,25 @@ export const SplashScreen = ({
           ]}>
           <ErrorBoundary>
             <View style={[a.justify_center, a.align_center]}>
-              <Logo width={kawaii ? 300 : 92} fill="sky" />
+              <Image
+                source={require('../../../../assets/fh-logo.png')}
+                accessibilityLabel="Forum XIII Hietzing"
+                accessibilityHint="Zeigt das Logo von Forum XIII Hietzing"
+                accessibilityIgnoresInvertColors
+                style={{width: kawaii ? 220 : 96, height: kawaii ? 220 : 96}}
+                resizeMode="contain"
+              />
 
-              {!kawaii && (
-                <View style={[a.pb_sm, a.pt_5xl]}>
-                  <Logotype width={161} fill={t.atoms.text.color} />
-                </View>
-              )}
+              <View style={[a.pb_sm, a.pt_5xl, a.align_center]}>
+                <Text
+                  style={[
+                    {fontSize: 32, lineHeight: 36},
+                    a.font_bold,
+                    t.atoms.text,
+                  ]}>
+                  Forum XIII Hietzing
+                </Text>
+              </View>
 
               <Text
                 style={[

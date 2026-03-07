@@ -18,18 +18,18 @@ export function useValuePropText(step: 0 | 1 | 2) {
       ),
     },
     {
-      title: _(msg`Find your people`),
+      title: _(msg`Menschen aus Hietzing`),
       description: _(
-        msg`Ditch the trolls and clickbait. Find real people and conversations that matter to you.`,
+        msg`Gespräche aus der Nachbarschaft. Forum XIII Hietzing bringt den 13. Bezirk digital zusammen.`,
       ),
       alt: _(
         msg`Your profile picture surrounded by concentric circles of other users' profile pictures`,
       ),
     },
     {
-      title: _(msg`Forget the noise`),
+      title: _(msg`Nah. Lokal. Hietzing.`),
       description: _(
-        msg`No ads, no invasive tracking, no engagement traps. Bluesky respects your time and attention.`,
+        msg`Hinweise, Ideen und Austausch aus der Hietzinger Nachbarschaft – freundlich, direkt und auf Augenhöhe.`,
       ),
       alt: _(
         msg`An illustration of several Bluesky posts alongside repost, like, and comment icons`,

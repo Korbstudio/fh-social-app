@@ -1,5 +1,5 @@
 import {useEffect, useState} from 'react'
-import {Pressable, View} from 'react-native'
+import {Image, Pressable, View} from 'react-native'
 import {ImageBackground} from 'expo-image'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
@@ -7,7 +7,6 @@ import {Trans} from '@lingui/react/macro'
 import {FocusGuards, FocusScope} from 'radix-ui/internal'
 
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
-import {Logo} from '#/view/icons/Logo'
 import {atoms as a, flatten, useBreakpoints, web} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Times'
@@ -107,7 +106,14 @@ export function WelcomeModal({control}: WelcomeModalProps) {
                   a.p_0,
                 ]}>
                 <View style={[a.flex_row, a.align_center, a.gap_xs]}>
-                  <Logo width={26} />
+                  <Image
+                    source={require('../../assets/fh-logo.png')}
+                    accessibilityLabel="Forum XIII Hietzing"
+                    accessibilityHint="Zeigt das Logo von Forum XIII Hietzing"
+                    accessibilityIgnoresInvertColors
+                    style={{width: 26, height: 26}}
+                    resizeMode="contain"
+                  />
                   <Text
                     style={[
                       a.text_2xl,
@@ -115,7 +121,7 @@ export function WelcomeModal({control}: WelcomeModalProps) {
                       a.user_select_none,
                       {color: '#354358', letterSpacing: -0.5},
                     ]}>
-                    Bluesky
+                    Forum XIII Hietzing
                   </Text>
                 </View>
               </View>
@@ -144,11 +150,11 @@ export function WelcomeModal({control}: WelcomeModalProps) {
                       letterSpacing: -0.5,
                     }),
                   ]}>
-                  <Trans>Real people.</Trans>
+                  Hietzing spricht miteinander.
                   {'\n'}
-                  <Trans>Real conversations.</Trans>
+                  Aus der Nachbarschaft.
                   {'\n'}
-                  <Trans>Social media you control.</Trans>
+                  Für die Nachbarschaft.
                 </Text>
               </View>
               <View style={[a.gap_md, a.align_center]}>

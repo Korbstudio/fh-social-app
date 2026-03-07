@@ -38,7 +38,7 @@ module.exports = function (_config) {
   return {
     expo: {
       version: VERSION,
-      name: 'Bluesky',
+      name: 'Forum XIII Hietzing',
       slug: 'bluesky',
       scheme: 'bluesky',
       owner: 'blueskysocial',
