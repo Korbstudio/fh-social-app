@@ -223,11 +223,15 @@ function HomeScreenReady({
           {...props}
           testID="homeScreenFeedTabs"
           onPressSelected={onPressSelected}
-          feeds={pinnedFeedInfos}
+          feeds={
+            hasSession
+              ? pinnedFeedInfos
+              : pinnedFeedInfos.filter(feed => feed.displayName !== 'Discover')
+          }
         />
       )
     },
-    [onPressSelected, pinnedFeedInfos, demoMode],
+    [onPressSelected, pinnedFeedInfos, demoMode, hasSession],
   )
 
   const renderFollowingEmptyState = React.useCallback(() => {
