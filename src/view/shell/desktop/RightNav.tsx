@@ -25,6 +25,38 @@ import {ProgressGuideList} from '#/components/ProgressGuide/List'
 import {Text} from '#/components/Typography'
 import {SidebarLiveEventFeedsBanner} from '#/features/liveEvents/components/SidebarLiveEventFeedsBanner'
 
+function LoggedOutForumHietzingCard() {
+  const t = useTheme()
+
+  return (
+    <View
+      style={[
+        {
+          borderWidth: 1,
+          borderColor: 'rgba(128, 128, 128, 0.25)',
+          borderRadius: 16,
+          padding: 16,
+          backgroundColor: 'rgba(128, 128, 128, 0.04)',
+        },
+      ]}>
+      <Text style={[a.text_xl, a.font_bold, {marginBottom: 8}]}>
+        Forum Hietzing
+      </Text>
+      <Text
+        style={[
+          a.leading_snug,
+          t.atoms.text_contrast_medium,
+          {marginBottom: 8},
+        ]}>
+        Das soziale Netzwerk für den 13. Wiener Gemeindebezirk, Hietzing.
+      </Text>
+      <Text style={[a.leading_snug, t.atoms.text_contrast_medium]}>
+        Lokale Themen, Nachbarschaft, Veranstaltungen und Diskussionen.
+      </Text>
+    </View>
+  )
+}
+
 function useWebQueryParams() {
   const navigation = useNavigation()
   const [params, setParams] = useState<Record<string, string>>({})
@@ -93,8 +125,15 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
         </>
       )}
 
-      {showExploreScreenDuplicatedContent && <SidebarLiveEventFeedsBanner />}
-      {showExploreScreenDuplicatedContent && <SidebarTrendingTopics />}
+      {hasSession && showExploreScreenDuplicatedContent && (
+        <SidebarLiveEventFeedsBanner />
+      )}
+      {hasSession && showExploreScreenDuplicatedContent && (
+        <SidebarTrendingTopics />
+      )}
+      {!hasSession && showExploreScreenDuplicatedContent && (
+        <LoggedOutForumHietzingCard />
+      )}
 
       <Text style={[a.leading_snug, t.atoms.text_contrast_low]}>
         {hasSession && (
