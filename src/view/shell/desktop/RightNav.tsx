@@ -1,5 +1,5 @@
 import {useEffect, useState} from 'react'
-import {View} from 'react-native'
+import {Image, View} from 'react-native'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
@@ -39,6 +39,17 @@ function LoggedOutForumHietzingCard() {
           backgroundColor: 'rgba(128, 128, 128, 0.04)',
         },
       ]}>
+      <Image
+        source={require('../../../../assets/forum_hietzing_claim.jpg')}
+        style={{
+          width: '100%',
+          height: 120,
+          borderRadius: 12,
+          marginBottom: 12,
+        }}
+        resizeMode="cover"
+        accessibilityIgnoresInvertColors={true}
+      />
       <Text style={[a.text_xl, a.font_bold, {marginBottom: 8}]}>
         Forum Hietzing
       </Text>
