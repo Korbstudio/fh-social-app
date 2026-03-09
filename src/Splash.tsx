@@ -1,34 +1,18 @@
-import React, {useCallback, useEffect} from 'react'
-import {
-  AccessibilityInfo,
-  Image as RNImage,
-  StyleSheet,
-  useColorScheme,
-  View,
-} from 'react-native'
+import React, {useCallback} from 'react'
+import {Image as RNImage, StyleSheet, useColorScheme, View} from 'react-native'
 import Animated, {
-  Easing,
   interpolate,
-  runOnJS,
   useAnimatedStyle,
   useSharedValue,
-  withTiming,
 } from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import Svg, {Path, type SvgProps} from 'react-native-svg'
 import {Image} from 'expo-image'
-import * as SplashScreen from 'expo-splash-screen'
 
 // @ts-ignore
 import forumHietzingClaimPointer from '../assets/forum_hietzing_claim.png'
 // @ts-ignore
-import splashImagePointer from '../assets/splash/splash.png'
 // @ts-ignore
-import darkSplashImagePointer from '../assets/splash/splash-dark.png'
-const splashImageUri = RNImage.resolveAssetSource(splashImagePointer).uri
-const darkSplashImageUri = RNImage.resolveAssetSource(
-  darkSplashImagePointer,
-).uri
 const forumHietzingClaimUri = RNImage.resolveAssetSource(
   forumHietzingClaimPointer,
 ).uri
@@ -63,9 +47,9 @@ export function Splash(props: React.PropsWithChildren<Props>) {
   const outroApp = useSharedValue(0)
   const outroAppOpacity = useSharedValue(0)
   const [isAnimationComplete, setIsAnimationComplete] = React.useState(false)
-  const [isImageLoaded, setIsImageLoaded] = React.useState(false)
+  const [isImageLoaded] = React.useState(true)
   const [isLayoutReady, setIsLayoutReady] = React.useState(false)
-  const [reduceMotion, setReduceMotion] = React.useState<boolean | undefined>(
+  const [reduceMotion, _setReduceMotion] = React.useState<boolean | undefined>(
     false,
   )
   const isReady =
@@ -133,53 +117,8 @@ export function Splash(props: React.PropsWithChildren<Props>) {
     }
   })
 
-  const onFinish = useCallback(() => setIsAnimationComplete(true), [])
+  const _onFinish = useCallback(() => setIsAnimationComplete(true), [])
   const onLayout = useCallback(() => setIsLayoutReady(true), [])
-  const onLoadEnd = useCallback(() => setIsImageLoaded(true), [])
-
-  useEffect(() => {
-    if (isReady) {
-      SplashScreen.hideAsync()
-        .then(() => {
-          intro.set(() =>
-            withTiming(
-              1,
-              {duration: 400, easing: Easing.out(Easing.cubic)},
-              () => {
-                'worklet'
-                // set these values to check animation at specific point
-                outroLogo.set(() =>
-                  withTiming(
-                    1,
-                    {duration: 1200, easing: Easing.in(Easing.cubic)},
-                    () => {
-                      runOnJS(onFinish)()
-                    },
-                  ),
-                )
-                outroApp.set(() =>
-                  withTiming(1, {
-                    duration: 1200,
-                    easing: Easing.inOut(Easing.cubic),
-                  }),
-                )
-                outroAppOpacity.set(() =>
-                  withTiming(1, {
-                    duration: 1200,
-                    easing: Easing.in(Easing.cubic),
-                  }),
-                )
-              },
-            ),
-          )
-        })
-        .catch(() => {})
-    }
-  }, [onFinish, intro, outroLogo, outroApp, outroAppOpacity, isReady])
-
-  useEffect(() => {
-    AccessibilityInfo.isReduceMotionEnabled().then(setReduceMotion)
-  }, [])
 
   const logoAnimations =
     reduceMotion === true ? reducedLogoAnimation : logoAnimation
@@ -188,14 +127,12 @@ export function Splash(props: React.PropsWithChildren<Props>) {
   return (
     <View style={{flex: 1}} onLayout={onLayout}>
       {!isAnimationComplete && (
-        <View style={StyleSheet.absoluteFillObject}>
-          <Image
-            accessibilityIgnoresInvertColors
-            onLoadEnd={onLoadEnd}
-            source={{uri: isDarkMode ? darkSplashImageUri : splashImageUri}}
-            style={StyleSheet.absoluteFillObject}
-          />
-        </View>
+        <View
+          style={[
+            StyleSheet.absoluteFillObject,
+            {backgroundColor: isDarkMode ? '#0f172a' : '#ffffff'},
+          ]}
+        />
       )}
 
       {isReady && (
