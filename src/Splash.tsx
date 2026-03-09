@@ -19,7 +19,8 @@ import Svg, {Path, type SvgProps} from 'react-native-svg'
 import {Image} from 'expo-image'
 import * as SplashScreen from 'expo-splash-screen'
 
-import {Logotype} from '#/view/icons/Logotype'
+// @ts-ignore
+import forumHietzingClaimPointer from '../assets/forum_hietzing_claim.png'
 // @ts-ignore
 import splashImagePointer from '../assets/splash/splash.png'
 // @ts-ignore
@@ -27,6 +28,9 @@ import darkSplashImagePointer from '../assets/splash/splash-dark.png'
 const splashImageUri = RNImage.resolveAssetSource(splashImagePointer).uri
 const darkSplashImageUri = RNImage.resolveAssetSource(
   darkSplashImagePointer,
+).uri
+const forumHietzingClaimUri = RNImage.resolveAssetSource(
+  forumHietzingClaimPointer,
 ).uri
 
 export const Logo = React.forwardRef(function LogoImpl(props: SvgProps, ref) {
@@ -88,11 +92,6 @@ export function Splash(props: React.PropsWithChildren<Props>) {
           ),
         },
       ],
-      opacity: interpolate(intro.get(), [0, 1], [0, 1], 'clamp'),
-    }
-  })
-  const bottomLogoAnimation = useAnimatedStyle(() => {
-    return {
       opacity: interpolate(intro.get(), [0, 1], [0, 1], 'clamp'),
     }
   })
@@ -185,7 +184,6 @@ export function Splash(props: React.PropsWithChildren<Props>) {
   const logoAnimations =
     reduceMotion === true ? reducedLogoAnimation : logoAnimation
   // special off-spec color for dark mode
-  const logoBg = isDarkMode ? '#0F1824' : '#fff'
 
   return (
     <View style={{flex: 1}} onLayout={onLayout}>
@@ -197,22 +195,6 @@ export function Splash(props: React.PropsWithChildren<Props>) {
             source={{uri: isDarkMode ? darkSplashImageUri : splashImageUri}}
             style={StyleSheet.absoluteFillObject}
           />
-
-          <Animated.View
-            style={[
-              bottomLogoAnimation,
-              {
-                position: 'absolute',
-                bottom: insets.bottom + 40,
-                left: 0,
-                right: 0,
-                alignItems: 'center',
-                justifyContent: 'center',
-                opacity: 0,
-              },
-            ]}>
-            <Logotype fill="#fff" width={90} />
-          </Animated.View>
         </View>
       )}
 
@@ -235,7 +217,16 @@ export function Splash(props: React.PropsWithChildren<Props>) {
                 },
               ]}>
               <Animated.View style={[logoAnimations]}>
-                <Logo fill={logoBg} />
+                <Image
+                  source={{uri: forumHietzingClaimUri}}
+                  style={{
+                    width: '84%',
+                    maxWidth: 390,
+                    height: 130,
+                    alignSelf: 'center',
+                  }}
+                  contentFit="contain"
+                />
               </Animated.View>
             </Animated.View>
           )}
