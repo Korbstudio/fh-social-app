@@ -40,14 +40,14 @@ function LoggedOutForumHietzingCard() {
         },
       ]}>
       <Image
-        source={require('../../../../assets/forum_hietzing_claim.jpg')}
+        source={require('../../../../assets/forum_hietzing_claim.png')}
         style={{
           width: '100%',
-          height: 120,
+          height: 92,
           borderRadius: 12,
           marginBottom: 12,
         }}
-        resizeMode="cover"
+        resizeMode="contain"
         accessibilityIgnoresInvertColors={true}
       />
       <Text style={[a.text_xl, a.font_bold, {marginBottom: 8}]}>
