@@ -56,7 +56,8 @@ const GUEST_CUSTOM_FEEDS = [
     cid: '',
     did: 'did:web:feeds.forum-hietzing.at',
     displayName: 'Wiener Linien Hietzing',
-    description: 'Automatische Detailmeldungen zu Störungen und Updates der Wiener Linien mit Hietzing-Bezug.',
+    description:
+      'Automatische Detailmeldungen zu Störungen und Updates der Wiener Linien mit Hietzing-Bezug.',
     descriptionFacets: [],
     avatar: '',
     likeCount: 0,
@@ -497,7 +498,8 @@ export function FeedsScreen(_props: Props) {
             </View>
           </>
         ) : (
-          <View style={{paddingHorizontal: 12, paddingTop: 12, paddingBottom: 8}}>
+          <View
+            style={{paddingHorizontal: 12, paddingTop: 12, paddingBottom: 8}}>
             <Text>Forum Hietzing Feeds</Text>
           </View>
         )
@@ -547,6 +549,7 @@ export function FeedsScreen(_props: Props) {
       onPressCancelSearch,
       onSubmitQuery,
       onChangeSearchFocus,
+      hasSession,
     ],
   )
 
