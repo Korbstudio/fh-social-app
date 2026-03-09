@@ -5,8 +5,7 @@ import {
   Pressable,
   StyleSheet,
   useWindowDimensions,
-  View,
-} from 'react-native'
+  View,Platform} from 'react-native'
 import Animated, {
   measure,
   runOnJS,
@@ -73,17 +72,83 @@ function PlaceholderOverlay({
 }
 
 // This renders the webview/youtube player as a separate layer
+
+function extractYouTubeId(url: string): string | undefined {
+  try {
+    const u = new URL(url)
+    const host = u.hostname.replace(/^www\./, '')
+    if (host === 'youtu.be') {
+      return u.pathname.split('/').filter(Boolean)[0]
+    }
+    if (host === 'youtube.com' || host === 'm.youtube.com') {
+      if (u.pathname === '/watch') return u.searchParams.get('v') || undefined
+      const m = u.pathname.match(/^\/(?:embed|shorts|live)\/([^/?#]+)/)
+      if (m) return m[1]
+    }
+  } catch {}
+  return undefined
+}
+
+function extractVimeoId(url: string): string | undefined {
+  try {
+    const u = new URL(url)
+    const host = u.hostname.replace(/^www\./, '')
+    if (host === 'vimeo.com' || host === 'player.vimeo.com') {
+      const m = u.pathname.match(/\/(?:video\/)?(\d+)/)
+      if (m) return m[1]
+    }
+  } catch {}
+  return undefined
+}
+
+function getWebEmbedUri(
+  params: EmbedPlayerParams,
+  link?: AppBskyEmbedExternal.ViewExternal,
+): string {
+  const candidates = [
+    link?.uri,
+    (link as any)?.href,
+    (params as any)?.uri,
+    (params as any)?.externalUri,
+    (params as any)?.href,
+    (params as any)?.playerUri,
+  ].filter((v): v is string => typeof v === 'string' && v.length > 0)
+
+  if (Platform.OS === 'web') {
+    console.log('FH ExternalPlayer debug', {
+      link,
+      params,
+      candidates,
+    })
+  }
+
+  for (const raw of candidates) {
+    const yt = extractYouTubeId(raw)
+    if (yt) {
+      return `https://www.youtube-nocookie.com/embed/${yt}?autoplay=1&playsinline=1&rel=0`
+    }
+
+    const vm = extractVimeoId(raw)
+    if (vm) {
+      return `https://player.vimeo.com/video/${vm}?autoplay=1`
+    }
+  }
+
+  return params.playerUri
+}
+
+
 function Player({
+  link,
   params,
   onLoad,
   isPlayerActive,
 }: {
+  link?: AppBskyEmbedExternal.ViewExternal
   isPlayerActive: boolean
   params: EmbedPlayerParams
   onLoad: () => void
 }) {
-  // ensures we only load what's requested
-  // when it's a youtube video, we need to allow both bsky.app and youtube.com
   const onShouldStartLoadWithRequest = React.useCallback(
     (event: ShouldStartLoadRequest) =>
       event.url === params.playerUri ||
@@ -92,25 +157,39 @@ function Player({
     [params.playerUri, params.source],
   )
 
-  // Don't show the player until it is active
   if (!isPlayerActive) return null
 
+  if (Platform.OS === 'web') {
+    return (
+      <View style={[StyleSheet.absoluteFill, styles.playerLayer]}>
+        <iframe
+          src={getWebEmbedUri(params, link)}
+          title="External video player"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowFullScreen
+          referrerPolicy="strict-origin-when-cross-origin"
+          sandbox="allow-same-origin allow-scripts allow-popups allow-presentation"
+          onLoad={onLoad}
+          style={{
+            width: '100%',
+            height: '100%',
+            border: '0',
+            background: 'transparent',
+          }}
+        />
+      </View>
+    )
+  }
+
   return (
-    <EventStopper style={[a.absolute, a.inset_0, styles.playerLayer]}>
-      <WebView
-        javaScriptEnabled={true}
-        onShouldStartLoadWithRequest={onShouldStartLoadWithRequest}
-        mediaPlaybackRequiresUserAction={false}
-        allowsInlineMediaPlayback
-        bounces={false}
-        allowsFullscreenVideo
-        nestedScrollEnabled
-        source={{uri: params.playerUri}}
-        onLoad={onLoad}
-        style={styles.webview}
-        setSupportMultipleWindows={false} // Prevent any redirects from opening a new window (ads)
-      />
-    </EventStopper>
+    <WebView
+      source={{uri: params.playerUri}}
+      onLoadEnd={onLoad}
+      allowsFullscreenVideo
+      mediaPlaybackRequiresUserAction={false}
+      onShouldStartLoadWithRequest={onShouldStartLoadWithRequest}
+      style={[StyleSheet.absoluteFill, styles.playerLayer, styles.webview]}
+    />
   )
 }
 

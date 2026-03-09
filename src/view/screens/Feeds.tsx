@@ -50,6 +50,31 @@ import {IS_NATIVE, IS_WEB} from '#/env'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Feeds'>
 
+const GUEST_CUSTOM_FEEDS = [
+  {
+    uri: 'at://did:plc:otskqo3aonfbgsawlnxcpk23/app.bsky.feed.generator/wiener-linien-stoerungen',
+    cid: '',
+    did: 'did:web:feeds.forum-hietzing.at',
+    displayName: 'Wiener Linien Hietzing',
+    description: 'Automatische Detailmeldungen zu Störungen und Updates der Wiener Linien mit Hietzing-Bezug.',
+    descriptionFacets: [],
+    avatar: '',
+    likeCount: 0,
+    labels: [],
+    indexedAt: '1970-01-01T00:00:00.000Z',
+    creator: {
+      did: 'did:plc:otskqo3aonfbgsawlnxcpk23',
+      handle: 'wl-hietzing.forum-hietzing.at',
+      displayName: 'Wiener Linien - Hietzing (Bot)',
+      avatar: '',
+      labels: [],
+      viewer: undefined,
+      associated: undefined,
+      createdAt: '1970-01-01T00:00:00.000Z',
+    },
+  } as unknown as AppBskyFeedDefs.GeneratorView,
+]
+
 type FlatlistSlice =
   | {
       type: 'error'
@@ -201,6 +226,25 @@ export function FeedsScreen(_props: Props) {
 
   const items = React.useMemo(() => {
     let slices: FlatlistSlice[] = []
+
+    if (!hasSession) {
+      slices.push({
+        key: 'popularFeedsHeader',
+        type: 'popularFeedsHeader',
+      })
+
+      slices = slices.concat(
+        GUEST_CUSTOM_FEEDS.map(feed => ({
+          key: `popularFeed:${feed.uri}`,
+          type: 'popularFeed' as const,
+          feedUri: feed.uri,
+          feed,
+        })),
+      )
+
+      return slices
+    }
+
     const hasActualSavedCount =
       !isSavedFeedsPlaceholder ||
       (isSavedFeedsPlaceholder && (savedFeeds?.count || 0) > 0)
@@ -437,7 +481,7 @@ export function FeedsScreen(_props: Props) {
       } else if (item.type === 'savedFeed') {
         return <FeedOrFollowing savedFeed={item.savedFeed} />
       } else if (item.type === 'popularFeedsHeader') {
-        return (
+        return hasSession ? (
           <>
             <FeedsAboutHeader />
             <View style={{paddingHorizontal: 12, paddingBottom: 4}}>
@@ -452,6 +496,10 @@ export function FeedsScreen(_props: Props) {
               />
             </View>
           </>
+        ) : (
+          <View style={{paddingHorizontal: 12, paddingTop: 12, paddingBottom: 8}}>
+            <Text>Forum Hietzing Feeds</Text>
+          </View>
         )
       } else if (item.type === 'popularFeedsLoading') {
         return <FeedFeedLoadingPlaceholder />

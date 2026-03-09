@@ -32,6 +32,11 @@ import {BottomSheetOutlet} from '#/../modules/bottom-sheet'
 import {useAgeAssurance} from '#/ageAssurance'
 import {useAgeAssuranceDataContext} from '#/ageAssurance/data'
 import {useComputeAgeAssuranceRegionAccess} from '#/ageAssurance/useComputeAgeAssuranceRegionAccess'
+
+const SHOULD_HIDE_LOCAL_NO_ACCESS_SCREEN = () =>
+  typeof window !== 'undefined' &&
+  window.location.hostname === 'forum-hietzing.at'
+
 import {
   isLegacyBirthdateBug,
   useAgeAssuranceRegionConfig,
@@ -43,6 +48,10 @@ import {useDeviceGeolocationApi} from '#/geolocation'
 const textStyles = [a.text_md, a.leading_snug]
 
 export function NoAccessScreen() {
+  if (SHOULD_HIDE_LOCAL_NO_ACCESS_SCREEN()) {
+    return null
+  }
+
   const t = useTheme()
   const {_} = useLingui()
   const ax = useAnalytics()

@@ -130,7 +130,13 @@ export function Provider({children}: {children?: React.ReactNode}) {
   )
 }
 
+const SHOULD_HIDE_LOCAL_REDIRECT_OVERLAY = () =>
+  typeof window !== 'undefined' &&
+  window.location.hostname === 'forum-hietzing.at'
+
 export function RedirectOverlay() {
+  if (SHOULD_HIDE_LOCAL_REDIRECT_OVERLAY()) return null
+
   const t = useTheme()
   const {_} = useLingui()
   const {isOpen} = useRedirectOverlayContext()

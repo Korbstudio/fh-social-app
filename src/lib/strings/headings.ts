@@ -1,4 +1,3 @@
-export function bskyTitle(page: string, unreadCountLabel?: string) {
-  const unreadPrefix = unreadCountLabel ? `(${unreadCountLabel}) ` : ''
-  return `${unreadPrefix}${page} — Bluesky`
+export function bskyTitle(_page: string, _unreadCountLabel?: string) {
+  return 'Forum XIII Hietzing'
 }

@@ -12,9 +12,21 @@ import {
   parseStatusFromString,
 } from '#/ageAssurance/types'
 import {getAgeAssuranceRegionConfigWithFallback} from '#/ageAssurance/util'
+
+const SHOULD_BYPASS_LOCAL_AGE_ASSURANCE = () =>
+  typeof window !== 'undefined' &&
+  window.location.hostname === 'forum-hietzing.at'
+
 import {useGeolocation} from '#/geolocation'
 
 export function useAgeAssuranceState(): AgeAssuranceState {
+  if (SHOULD_BYPASS_LOCAL_AGE_ASSURANCE()) {
+    return {
+      status: AgeAssuranceStatus.Unknown,
+      access: AgeAssuranceAccess.Full,
+    }
+  }
+
   const {hasSession} = useSession()
   const geolocation = useGeolocation()
   const {config, state, data} = useAgeAssuranceDataContext()
