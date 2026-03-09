@@ -1,13 +1,11 @@
 import React from 'react'
-import {View} from 'react-native'
+import {Image, View} from 'react-native'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useCloseAllActiveElements} from '#/state/util'
-import {Logo} from '#/view/icons/Logo'
-import {Logotype} from '#/view/icons/Logotype'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
@@ -44,22 +42,21 @@ function SigninDialogInner({}: {control: Dialog.DialogOuterProps['control']}) {
 
   return (
     <Dialog.ScrollableInner
-      label={_(msg`Sign in to Bluesky or create a new account`)}
+      label={_(msg`Sign in to Forum Hietzing or create a new account`)}
       style={[gtMobile ? {width: 'auto', maxWidth: 420} : a.w_full]}>
       <View style={[!IS_NATIVE && a.p_2xl]}>
-        <View
-          style={[
-            a.flex_row,
-            a.align_center,
-            a.justify_center,
-            a.gap_sm,
-            a.pb_lg,
-          ]}>
-          <Logo width={36} />
-          <View style={{paddingTop: 6}}>
-            <Logotype width={120} fill={t.atoms.text.color} />
-          </View>
-        </View>
+        <Image
+          source={require('../../../assets/forum_hietzing_claim.png')}
+          style={{
+            width: '100%',
+            maxWidth: 360,
+            height: 130,
+            alignSelf: 'center',
+            marginBottom: 18,
+          }}
+          resizeMode="contain"
+          accessibilityIgnoresInvertColors={true}
+        />
 
         <Text
           style={[
